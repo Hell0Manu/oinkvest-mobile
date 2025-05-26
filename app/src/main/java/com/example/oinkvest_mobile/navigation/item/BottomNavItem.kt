@@ -27,13 +27,13 @@ sealed class BottomNavItem (
     )
 
     data object  Friends: BottomNavItem(
-        title = R.string.bottom_bar_item_search,
+        title = R.string.bottom_bar_item_friends,
         selectedIcon = R.drawable.settings_fill,
         unSelectedIcon = R.drawable.settings_line
     )
 
     data object  Profile : BottomNavItem(
-        title = R.string.bottom_bar_item_search,
+        title = R.string.bottom_bar_item_profile,
         selectedIcon = R.drawable.user_fill,
         unSelectedIcon = R.drawable.user_line
     )

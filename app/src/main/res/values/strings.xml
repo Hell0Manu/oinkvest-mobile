@@ -2,8 +2,10 @@
     <string name="app_name">oinkvest-mobile</string>
 
     <!-- BottomAppBar -->
-    <string name="bottom_bar_item_feed">Feed</string>
-    <string name="bottom_bar_item_search">Pesquisar</string>
-    <string name="bottom_bar_item_friends">Amigos</string>
-    <string name="bottom_bar_item_profile">Perfil</string>
+    <string name="bottom_bar_item_feed">Dashboard</string>
+    <string name="bottom_bar_item_search">Carteira</string>
+    <string name="bottom_bar_item_friends">Histórico</string>
+    <string name="bottom_bar_item_profile">Alertas</string>
+    <string name="base_url">https://maraeliza.github.io/oinkvest-site/</string>
+
 </resources>
