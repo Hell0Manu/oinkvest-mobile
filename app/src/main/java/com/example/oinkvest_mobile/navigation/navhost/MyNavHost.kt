@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import com.example.oinkvest_mobile.main.home.HomeScreen
 import kotlinx.serialization.Serializable
 
-//Faz a navegação entre as telas
 @Composable
 fun MyNavHost(navHostController: NavHostController) {
     NavHost(

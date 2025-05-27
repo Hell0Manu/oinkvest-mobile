@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.oinkvest_mobile.main.feed.FeedScreen
-import com.example.oinkvest_mobile.main.friends.FriendsScreen
-import com.example.oinkvest_mobile.main.profile.ProfileScreen
-import com.example.oinkvest_mobile.main.search.SearchScreen
+import com.example.oinkvest_mobile.main.dashboard.DashboardScreen
+import com.example.oinkvest_mobile.main.history.HistoryScreen
+import com.example.oinkvest_mobile.main.notification.NotificationScreen
+import com.example.oinkvest_mobile.main.settings.SettingsScreen
+import com.example.oinkvest_mobile.main.wallet.WalletScreen
+
 
 import kotlinx.serialization.Serializable
 
@@ -15,31 +17,37 @@ import kotlinx.serialization.Serializable
 fun BottomAppBarNavHost(navHostController: NavHostController) {
     NavHost(
         navController = navHostController,
-        startDestination = FeedScreenRoute,
+        startDestination = DashboardScreenRoute,
     ) {
-        composable<FeedScreenRoute> {
-            FeedScreen()
+        composable<DashboardScreenRoute> {
+            DashboardScreen()
         }
-        composable<SearchScreenRoute> {
-            SearchScreen()
+        composable<WalletScreenRoute> {
+            WalletScreen()
         }
-        composable<FriendsScreenRoute> {
-           FriendsScreen()
+        composable<NotificationScreenRoute> {
+            NotificationScreen()
         }
-        composable<ProfileScreenRoute> {
-            ProfileScreen()
+        composable<HistoryScreenRoute> {
+            HistoryScreen()
         }
+       composable<SettingsScreenRoute> {
+           SettingsScreen()
+       }
     }
 }
 
 @Serializable
-object FeedScreenRoute
+object DashboardScreenRoute
 
 @Serializable
-object SearchScreenRoute
+object WalletScreenRoute
 
 @Serializable
-object FriendsScreenRoute
+object NotificationScreenRoute
 
 @Serializable
-object ProfileScreenRoute
+object HistoryScreenRoute
+
+@Serializable
+object  SettingsScreenRoute

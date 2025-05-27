@@ -1,4 +1,4 @@
-package com.example.oinkvest_mobile.main.feed
+package com.example.oinkvest_mobile.main.notification
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,18 +23,17 @@ import com.example.oinkvest_mobile.R
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun FeedScreen() {
+fun NotificationScreen() {
     Column (
         modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
         AndroidView(factory = { context ->
             WebView(context).apply {
-                val url = context.getString(R.string.base_url)
+                val url = context.getString(R.string.base_url) + "/alert.html"
                 webViewClient = WebViewClient()
                 settings.javaScriptEnabled = true
                 settings.loadWithOverviewMode = true
@@ -59,6 +57,6 @@ fun FeedScreen() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FeedScreenPreview() {
-    FeedScreen()
+private fun NotificationScreenPreview() {
+    NotificationScreen()
 }
