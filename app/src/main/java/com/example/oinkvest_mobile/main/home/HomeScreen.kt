@@ -1,10 +1,17 @@
 package com.example.oinkvest_mobile.main.home
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,15 +22,19 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.oinkvest_mobile.navigation.item.BottomNavItem
@@ -34,31 +45,69 @@ import com.example.oinkvest_mobile.navigation.navhost.NotificationScreenRoute
 import com.example.oinkvest_mobile.navigation.navhost.SettingsScreenRoute
 import com.example.oinkvest_mobile.navigation.navhost.WalletScreenRoute
 import com.example.oinkvest_mobile.R
+import com.example.oinkvest_mobile.ui.components.EnableBiometricDialog
+import com.example.oinkvest_mobile.presentation.viewmodel.AuthViewModel
+import com.example.oinkvest_mobile.presentation.viewmodel.HomeViewModel
+import com.example.oinkvest_mobile.ui.components.BiometricSettingsDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navHostController: NavHostController = rememberNavController()) {
+fun HomeScreen(navHostController: NavHostController = rememberNavController(), viewModel: HomeViewModel = viewModel()) {
     var selectedItem by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
+    val context = LocalContext.current
+    val showDialog by viewModel.showDialog.collectAsState()
+    val isBiometricEnabled by viewModel.isBiometricEnabled.collectAsState()
 
     Scaffold (
         topBar = {
             androidx.compose.material3.TopAppBar(
                 title = {
-                    Image(
-                        painter = painterResource(id = R.drawable.top_bar_icon),
-                        contentDescription = "Top Bar Icon",
-                        modifier = Modifier
-                            .padding(vertical = 8.dp)
-                            .size(100.dp)
-                    )
+                    Row(modifier = Modifier
+                        .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.top_bar_icon),
+                            contentDescription = "Top Bar Icon",
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .size(100.dp)
+                        )
+
+                        Image(
+                            painter = painterResource(id = R.drawable.fingerprint),
+                            contentDescription = "Fingerprint Icon",
+                            modifier = Modifier
+                                .absolutePadding(right = 16.dp)
+                                .size(25.dp)
+                                .clickable(indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    onClick = {
+                                        viewModel.onFingerprintIconClicked(context)
+                                    }),
+                        )
+                    }
                 },
                 colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF040313),
                     titleContentColor = Color.White
                 )
+
+
             )
+
+
+            if (showDialog) {
+                BiometricSettingsDialog(
+                    isCurrentlyEnabled = isBiometricEnabled,
+                    onConfirm = { viewModel.confirmBiometricChange(context) },
+                    onDismiss = { viewModel.dismissDialog() }
+                )
+            }
+
         },
 
         bottomBar = {
@@ -157,6 +206,7 @@ fun RowScope.AddBottomItem(
     )
 
 }
+
 
 @Preview(showBackground = true)
 @Composable

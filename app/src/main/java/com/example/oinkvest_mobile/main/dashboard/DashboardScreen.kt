@@ -28,17 +28,28 @@ fun DashboardScreen() {
         modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
 
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
-        AndroidView(factory = { context ->
+        AndroidView(
+            modifier = Modifier.weight(1f),
+            factory = { context ->
             WebView(context).apply {
                 val url = context.getString(R.string.base_url)
-                webViewClient = WebViewClient()
+
+                layoutParams = android.view.ViewGroup.LayoutParams(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT
+                )
+
                 settings.javaScriptEnabled = true
+                // Dica: Adicione isso para os controles de zoom funcionarem
+                settings.builtInZoomControls = true
+                settings.displayZoomControls = false // Opcional: esconde os botões +/-
+
                 settings.loadWithOverviewMode = true
-                settings.setSupportZoom(true)
                 webViewClient = object : WebViewClient(){
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         backButton = view?.canGoBack() == true
