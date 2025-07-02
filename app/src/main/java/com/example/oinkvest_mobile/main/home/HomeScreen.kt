@@ -45,10 +45,8 @@ import com.example.oinkvest_mobile.navigation.navhost.NotificationScreenRoute
 import com.example.oinkvest_mobile.navigation.navhost.SettingsScreenRoute
 import com.example.oinkvest_mobile.navigation.navhost.WalletScreenRoute
 import com.example.oinkvest_mobile.R
-import com.example.oinkvest_mobile.ui.components.EnableBiometricDialog
-import com.example.oinkvest_mobile.presentation.viewmodel.AuthViewModel
 import com.example.oinkvest_mobile.presentation.viewmodel.HomeViewModel
-import com.example.oinkvest_mobile.ui.components.BiometricSettingsDialog
+import com.example.oinkvest_mobile.presentation.components.BiometricSettingsDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

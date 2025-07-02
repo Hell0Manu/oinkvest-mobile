@@ -47,9 +47,10 @@ import com.example.oinkvest_mobile.presentation.viewmodel.AuthViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.VisualTransformation
-import com.example.oinkvest_mobile.ui.components.EnableBiometricDialog
+import com.example.oinkvest_mobile.presentation.components.EnableBiometricDialog
 import androidx.fragment.app.FragmentActivity
 import com.example.oinkvest_mobile.data.local.TokenManager
+import com.example.oinkvest_mobile.presentation.components.AnimatedBlurredBackground
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewModel()) {
@@ -71,104 +72,115 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewMod
     val context = LocalContext.current
     val activity = context as FragmentActivity
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colors.background)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
+    AnimatedBlurredBackground {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
 
-        ) {
-        Text(
-            text = "Faça login na\nOinkvest", style =
-                typography.displayMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = colors.onBackground
-                ),
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-        InputLoginText("E-mail", "Digite seu E-mail", email, { email = it })
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
 
-        InputLoginText("Senha", "Digite sua Senha", password, { password = it }, isPassword = true)
-
-        ButtonLogin("ENTRAR", {
-            viewModel.login(email, password, context)
-        })
-
-        if (showBiometricDialog) {
-            EnableBiometricDialog(
-                onConfirm = { viewModel.onBiometricPromptConfirmed(context) },
-                onDismiss = { viewModel.onBiometricPromptDismissed(context) }
+            ) {
+            Text(
+                text = "Faça login na\nOinkvest", style =
+                    typography.displayMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = colors.onBackground
+                    ),
+                modifier = Modifier.padding(bottom = 24.dp)
             )
-        }
+            InputLoginText("E-mail", "Digite seu E-mail", email, { email = it })
 
-        loginResult?.let { message ->
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            Log.i("LoginScreen", "mensagem: $message")
-            viewModel.onNavigationComplete()
-        }
+            InputLoginText(
+                "Senha",
+                "Digite sua Senha",
+                password,
+                { password = it },
+                isPassword = true
+            )
 
-        LaunchedEffect(Unit) {
-            // Verifica se a biometria está habilitada E se existe um token salvo
-            if (TokenManager.isBiometricEnabled(context) && TokenManager.getToken(context) != null) {
-                viewModel.attemptBiometricLogin(activity)
+            ButtonLogin("ENTRAR", {
+                viewModel.login(email, password, context)
+            })
+
+            if (showBiometricDialog) {
+                EnableBiometricDialog(
+                    onConfirm = { viewModel.onBiometricPromptConfirmed(context) },
+                    onDismiss = { viewModel.onBiometricPromptDismissed(context) }
+                )
             }
-        }
 
-        LaunchedEffect(navigateToHome) {
-            if (navigateToHome) {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
-                }
+            loginResult?.let { message ->
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                Log.i("LoginScreen", "mensagem: $message")
                 viewModel.onNavigationComplete()
             }
-        }
 
-        Text(
-            text = "Esqueceu sua senha?",
-            color = colors.onBackground,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
+            LaunchedEffect(Unit) {
+                // Verifica se a biometria está habilitada E se existe um token salvo
+                if (TokenManager.isBiometricEnabled(context) && TokenManager.getToken(context) != null) {
+                    viewModel.attemptBiometricLogin(activity)
+                }
+            }
 
-                    }),
-            textAlign = TextAlign.Center,
-            style = typography.bodyLarge
-        )
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        var enableLoginButton by remember { mutableStateOf(true) }
-        ButtonLoginGoogle("Continue com Google", { enableLoginButton = false }, enableLoginButton)
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Text(
-                "Não tem uma conta? ",
-                color = colors.onBackground,
-                style = typography.bodyLarge
-            )
+            LaunchedEffect(navigateToHome) {
+                if (navigateToHome) {
+                    navController.navigate("home") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                    viewModel.onNavigationComplete()
+                }
+            }
 
             Text(
-                text = "Cadastre-se",
-                style = typography.bodyLarge,
+                text = "Esqueceu sua senha?",
                 color = colors.onBackground,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
-                            navController.navigate("register")
+
                         }),
+                textAlign = TextAlign.Center,
+                style = typography.bodyLarge
             )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            var enableLoginButton by remember { mutableStateOf(true) }
+            ButtonLoginGoogle(
+                "Continue com Google",
+                { enableLoginButton = false },
+                enableLoginButton
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(
+                    "Não tem uma conta? ",
+                    color = colors.onBackground,
+                    style = typography.bodyLarge
+                )
+
+                Text(
+                    text = "Cadastre-se",
+                    style = typography.bodyLarge,
+                    color = colors.onBackground,
+                    modifier = Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = {
+                                navController.navigate("register")
+                            }),
+                )
+            }
         }
     }
-
 }
 
 
@@ -223,13 +235,12 @@ fun ButtonLogin(
 }
 
 
-
 @Composable
 fun ButtonLoginGoogle(
     text: String,
     onClick: () -> Unit,
     enable: Boolean
-){
+) {
 
 
     Button(

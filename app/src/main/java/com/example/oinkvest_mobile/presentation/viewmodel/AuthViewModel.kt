@@ -82,33 +82,42 @@ class AuthViewModel : ViewModel() {
     fun login(email: String, password: String, context: Context) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.authApi.login(LoginRequest(email, password))
+                val response = RetrofitClient.authApi.login(email, password)
                 if (response.isSuccessful) {
-                    val result = response.body()
-                    if (result?.status == "success" && result.token != null) {
 
-                        pendingToken = result.token
+                    //val result = response.body()
+                    val finalUrl = response.raw().request.url.toString()
+                    if (!finalUrl.contains("/login")) {
+
+                        //pendingToken = result.token
+
+                        Log.d("AuthViewModel", "Login bem-sucedido! Redirecionado para: $finalUrl")
 
                         // Verifica se o dispositivo suporta biometria
                         val biometricManager = BiometricManager.from(context)
                         val canAuthenticate = biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
+                        /*
                         if (canAuthenticate && !TokenManager.hasUserRespondedToPrompt(context)) {
+
                             // Se suporta, mostra o diálogo
                             _showBiometricDialog.value = true
                         } else {
+                        */
                             // Se não suporta, apenas navega para a home
                             _navigateToHome.value = true
-                        }
+                        //}
                     } else {
 
-                        _loginResult.value = result?.message ?: "Login inválido"
-                        Log.e("AuthViewModel", result?.message ?: "Login inválido")
+                        _loginResult.value = "Email ou senha inválidos."
+                        Log.e("AuthViewModel", "Falha no login")
                     }
                 } else {
                     _loginResult.value = "Erro no servidor"
+                    Log.e("AuthViewModel", "Erro na resposta do servidor: ${response.code()} - ${response.message()}")
                 }
             } catch (e: Exception) {
                 _loginResult.value = "Erro de rede: ${e.localizedMessage}"
+                Log.e("AuthViewModel", "Exceção na chamada de rede", e)
             }
         }
     }

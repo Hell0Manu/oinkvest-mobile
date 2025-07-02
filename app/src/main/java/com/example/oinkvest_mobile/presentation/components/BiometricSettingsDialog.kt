@@ -1,4 +1,4 @@
-package com.example.oinkvest_mobile.ui.components
+package com.example.oinkvest_mobile.presentation.components
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

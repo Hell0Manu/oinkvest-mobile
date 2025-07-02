@@ -43,9 +43,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.oinkvest_mobile.R
 import com.example.oinkvest_mobile.presentation.viewmodel.AuthViewModel
+import com.example.oinkvest_mobile.presentation.components.AnimatedBlurredBackground
 
 @Composable
-fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = viewModel()){
+fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = viewModel()) {
 
     val registerResult by viewModel.registerResult.collectAsState()
 
@@ -67,72 +68,89 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
 
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
+    AnimatedBlurredBackground {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colors.background)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
+            ) {
+            Text(
+                text = "Comece com a\nOinkvest", style =
+                    typography.displayMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = colors.onBackground
+                    ),
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        ) {
-        Text(
-            text = "Comece com a\nOinkvest", style =
-                typography.displayMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = colors.onBackground
-                ),
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+            InputRegisterText("Nome", "Digite seu Nome", name, { name = it })
+            InputRegisterText("E-mail", "Digite seu E-mail", email, { email = it })
+            InputRegisterText(
+                "Senha",
+                "Digite sua Senha",
+                password,
+                { password = it },
+                isPassword = true
+            )
+            InputRegisterText(
+                "",
+                "Confirme sua Senha",
+                passwordConfirm,
+                { passwordConfirm = it },
+                isPassword = true
+            )
 
-        InputRegisterText("Nome", "Digite seu Nome", name, { name = it })
-        InputRegisterText("E-mail", "Digite seu E-mail", email, { email = it })
-        InputRegisterText("Senha", "Digite sua Senha", password, { password = it }, isPassword = true)
-        InputRegisterText("", "Confirme sua Senha", passwordConfirm, { passwordConfirm = it }, isPassword = true)
+            ButtonRegister("CRIAR CONTA", { viewModel.register(name, email, password) })
 
-        ButtonRegister("CRIAR CONTA", { viewModel.register(name, email, password) })
-
-        registerResult ?.let {
-            Spacer(modifier = Modifier.height(16.dp))
-            if (it == "success") {
-                LaunchedEffect(Unit) {
-                    navController.navigate("login") {
-                        popUpTo("register") { inclusive = true }
+            registerResult?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+                if (it == "success") {
+                    LaunchedEffect(Unit) {
+                        navController.navigate("login") {
+                            popUpTo("register") { inclusive = true }
+                        }
                     }
+                } else {
+                    Text(it, color = MaterialTheme.colorScheme.error)
                 }
-            } else {
-                Text(it, color = MaterialTheme.colorScheme.error)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            var enableRegisterButton by remember { mutableStateOf(true) }
+            ButtonRegisterGoogle(
+                "Continue com Google",
+                { enableRegisterButton = false },
+                enableRegisterButton
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(
+                    "Já tem uma conta? ",
+                    color = colors.onBackground,
+                    style = typography.bodyLarge
+                )
+
+                Text(
+                    text = "Faça login",
+                    style = typography.bodyLarge,
+                    color = colors.onBackground,
+                    modifier = Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = {
+                                navController.navigate("login")
+                            }),
+                )
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        var enableRegisterButton by remember { mutableStateOf(true) }
-        ButtonRegisterGoogle("Continue com Google", { enableRegisterButton = false }, enableRegisterButton)
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-            Text("Já tem uma conta? ",
-                color = colors.onBackground,
-                style = typography.bodyLarge
-            )
-
-            Text(
-                text = "Faça login",
-                style = typography.bodyLarge,
-                color = colors.onBackground,
-                modifier = Modifier
-                    .clickable(indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            navController.navigate("login")
-                        }),
-            )
-        }
     }
-
 }
 
 @Composable
@@ -143,7 +161,7 @@ fun InputRegisterText(
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false
 ) {
-    if(title.isNotBlank()) {
+    if (title.isNotBlank()) {
         Text(
             text = title,
             color = MaterialTheme.colorScheme.onBackground,
@@ -193,7 +211,7 @@ fun ButtonRegisterGoogle(
     text: String,
     onClick: () -> Unit,
     enable: Boolean
-){
+) {
 
 
     Button(
