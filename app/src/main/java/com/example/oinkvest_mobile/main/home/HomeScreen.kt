@@ -77,7 +77,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                                 .padding(vertical = 8.dp)
                                 .size(100.dp)
                         )
-
+                        /*
                         Image(
                             painter = painterResource(id = R.drawable.fingerprint),
                             contentDescription = "Fingerprint Icon",
@@ -90,6 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                                         viewModel.onFingerprintIconClicked(context)
                                     }),
                         )
+                        */
                     }
                 },
                 colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(

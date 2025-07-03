@@ -7,8 +7,10 @@ import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,37 +26,48 @@ import com.example.oinkvest_mobile.R
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun HistoryScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF3F4F6)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    var isLoading by remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
         AndroidView(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxSize(),
             factory = { context ->
-            WebView(context).apply {
-                val url = context.getString(R.string.base_url) + "/history"
+                WebView(context).apply {
+                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    val url = context.getString(R.string.base_url) + "/history"
 
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.loadWithOverviewMode = true
+                    settings.setSupportZoom(true)
 
-                settings.builtInZoomControls = true
-                settings.displayZoomControls = false
-                settings.javaScriptEnabled = true
-                settings.loadWithOverviewMode = true
-                settings.setSupportZoom(true)
-                webViewClient = object : WebViewClient() {
-                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                        backButton = view?.canGoBack() == true
+                    webViewClient = object : WebViewClient() {
+                        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                            super.onPageStarted(view, url, favicon)
+                            isLoading = true
+                        }
+
+                        override fun onPageFinished(view: WebView?, url: String?) {
+                            super.onPageFinished(view, url)
+                            isLoading = false
+                            backButton = view?.canGoBack() ?: false
+                        }
                     }
+                    loadUrl(url)
                 }
-                loadUrl(url)
-            }
-        }, update = {
-            webView = it
-        })
+            }, update = {
+                webView = it
+                backButton = it.canGoBack()
+            } )
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
 
         BackHandler(enabled = backButton) {
             webView?.goBack()

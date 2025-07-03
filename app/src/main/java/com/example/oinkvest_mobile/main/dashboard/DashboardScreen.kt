@@ -6,10 +6,13 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -28,23 +32,21 @@ import com.example.oinkvest_mobile.data.local.LoginDataHolder
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun DashboardScreen() {
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF3F4F6)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
 
-    ) {
+    var isLoading by remember { mutableStateOf(true) }
 
-        var webView: WebView? = null
-        var backButton by remember { mutableStateOf(false) }
+    val webViewAlpha by animateFloatAsState(targetValue = if (isLoading) 0f else 1f, label = "webview alpha")
+
+    var webView: WebView? = null
+    var backButton by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxSize().alpha(webViewAlpha),
             factory = { context ->
             WebView(context).apply {
                 val url = context.getString(R.string.base_url) + "/dashboard"
 
+                setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 layoutParams = android.view.ViewGroup.LayoutParams(
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -87,6 +89,8 @@ fun DashboardScreen() {
 
                             view?.evaluateJavascript(jsScript, null)
                             LoginDataHolder.clear()
+                        }else{
+                            isLoading = false
                         }
                     }
                 }
@@ -95,6 +99,10 @@ fun DashboardScreen() {
         }, update = {
             webView = it
         } )
+
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
 
         BackHandler (enabled = backButton) {
             webView?.goBack()
