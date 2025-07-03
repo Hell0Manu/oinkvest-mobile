@@ -31,9 +31,11 @@ fun NotificationScreen() {
     ) {
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
-        AndroidView(factory = { context ->
+        AndroidView(
+            modifier = Modifier.weight(1f),
+            factory = { context ->
             WebView(context).apply {
-                val url = context.getString(R.string.base_url) + "/alert.html"
+                val url = context.getString(R.string.base_url) + "/notifications"
                 webViewClient = WebViewClient()
                 settings.javaScriptEnabled = true
                 settings.loadWithOverviewMode = true

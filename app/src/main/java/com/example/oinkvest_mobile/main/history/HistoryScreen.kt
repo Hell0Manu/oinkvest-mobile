@@ -24,22 +24,28 @@ import com.example.oinkvest_mobile.R
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun HistoryScreen() {
-    Column (
-        modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF3F4F6)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
-        AndroidView(factory = { context ->
+        AndroidView(
+            modifier = Modifier.weight(1f),
+            factory = { context ->
             WebView(context).apply {
-                val url = context.getString(R.string.base_url) + "/history.html"
+                val url = context.getString(R.string.base_url) + "/history"
 
-                webViewClient = WebViewClient()
+
+                settings.builtInZoomControls = true
+                settings.displayZoomControls = false
                 settings.javaScriptEnabled = true
                 settings.loadWithOverviewMode = true
                 settings.setSupportZoom(true)
-                webViewClient = object : WebViewClient(){
+                webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         backButton = view?.canGoBack() == true
                     }
@@ -48,9 +54,9 @@ fun HistoryScreen() {
             }
         }, update = {
             webView = it
-        } )
+        })
 
-        BackHandler (enabled = backButton) {
+        BackHandler(enabled = backButton) {
             webView?.goBack()
         }
     }

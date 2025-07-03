@@ -8,5 +8,5 @@
         <string name="bottom_bar_item_history">Historico</string>
         <string name="bottom_bar_item_settings">Configuração</string>
     <string name="base_url">http://oinkvest.ddns.net:8080</string>
-
+    <string name="base_url2">https://oinkvest-1.onrender.com</string>
 </resources>

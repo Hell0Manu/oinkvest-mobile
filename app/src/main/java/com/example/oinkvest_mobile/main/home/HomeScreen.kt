@@ -50,7 +50,10 @@ import com.example.oinkvest_mobile.presentation.components.BiometricSettingsDial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navHostController: NavHostController = rememberNavController(), viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+
+    val bottomNavController = rememberNavController()
+
     var selectedItem by remember {
         mutableIntStateOf(0)
     }
@@ -123,11 +126,11 @@ fun HomeScreen(navHostController: NavHostController = rememberNavController(), v
                             onClick = {
                                 selectedItem = index
                                 when(index) {
-                                    0 -> navHostController.navigate(DashboardScreenRoute)
-                                    1 -> navHostController.navigate(NotificationScreenRoute)
-                                    2 -> navHostController.navigate(WalletScreenRoute)
-                                    3 -> navHostController.navigate(HistoryScreenRoute)
-                                    4 -> navHostController.navigate(SettingsScreenRoute)
+                                    0 -> bottomNavController.navigate(DashboardScreenRoute)
+                                    1 -> bottomNavController.navigate(NotificationScreenRoute)
+                                    2 -> bottomNavController.navigate(WalletScreenRoute)
+                                    3 -> bottomNavController.navigate(HistoryScreenRoute)
+                                    4 -> bottomNavController.navigate(SettingsScreenRoute)
                                 }
                             },
 //                            label = {
@@ -169,7 +172,7 @@ fun HomeScreen(navHostController: NavHostController = rememberNavController(), v
 //                    modifier = Modifier.matchParentSize(),
 //                    contentScale = ContentScale.Crop
 //                )
-                BottomAppBarNavHost(navHostController)
+                BottomAppBarNavHost(bottomNavController)
             }
 
         }

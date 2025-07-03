@@ -29,23 +29,25 @@ fun WalletScreen() {
     ) {
         var webView: WebView? = null
         var backButton by remember { mutableStateOf(false) }
-        AndroidView(factory = { context ->
-            WebView(context).apply {
-                val url = context.getString(R.string.base_url) + "wallet.html"
-                webViewClient = WebViewClient()
-                settings.javaScriptEnabled = true
-                settings.loadWithOverviewMode = true
-                settings.setSupportZoom(true)
-                webViewClient = object : WebViewClient(){
-                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                        backButton = view?.canGoBack() == true
+        AndroidView(
+            modifier = Modifier.weight(1f),
+            factory = { context ->
+                WebView(context).apply {
+                    val url = context.getString(R.string.base_url) + "/wallet"
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.loadWithOverviewMode = true
+                    settings.setSupportZoom(true)
+                    webViewClient = object : WebViewClient(){
+                        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                            backButton = view?.canGoBack() == true
+                        }
                     }
+                    loadUrl(url)
                 }
-                loadUrl(url)
-            }
-        }, update = {
-            webView = it
-        } )
+            }, update = {
+                webView = it
+            } )
 
         BackHandler (enabled = backButton) {
             webView?.goBack()

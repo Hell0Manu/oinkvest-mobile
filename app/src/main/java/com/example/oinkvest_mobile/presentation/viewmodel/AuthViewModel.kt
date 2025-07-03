@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oinkvest_mobile.data.local.SessionManager
 import com.example.oinkvest_mobile.data.local.TokenManager
 import com.example.oinkvest_mobile.data.remote.RetrofitClient
 import com.example.oinkvest_mobile.data.remote.api.LoginRequest
@@ -32,7 +33,6 @@ class AuthViewModel : ViewModel() {
 
     private val _registerResult = MutableStateFlow<String?>(null)
     val registerResult: StateFlow<String?> = _registerResult
-
 
     fun attemptBiometricLogin(activity: FragmentActivity) {
         viewModelScope.launch {
@@ -80,22 +80,25 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String, context: Context) {
+
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.authApi.login(email, password)
-                if (response.isSuccessful) {
+                val loginRequest = LoginRequest(email = email, password = password)
+                val response = RetrofitClient.authApi.login(loginRequest)
 
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
                     //val result = response.body()
-                    val finalUrl = response.raw().request.url.toString()
-                    if (!finalUrl.contains("/login")) {
+                    //val finalUrl = response.raw().request.url.toString()
+                    if (loginResponse != null) {
 
                         //pendingToken = result.token
 
-                        Log.d("AuthViewModel", "Login bem-sucedido! Redirecionado para: $finalUrl")
+                        //SessionManager.saveSessionId(context, loginResponse.token)
 
                         // Verifica se o dispositivo suporta biometria
-                        val biometricManager = BiometricManager.from(context)
-                        val canAuthenticate = biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
+                        //val biometricManager = BiometricManager.from(context)
+                        //val canAuthenticate = biometricManager.canAuthenticate(BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS
                         /*
                         if (canAuthenticate && !TokenManager.hasUserRespondedToPrompt(context)) {
 
@@ -103,17 +106,22 @@ class AuthViewModel : ViewModel() {
                             _showBiometricDialog.value = true
                         } else {
                         */
-                            // Se não suporta, apenas navega para a home
-                            _navigateToHome.value = true
+                        // Se não suporta, apenas navega para a home
+                        _navigateToHome.value = true
                         //}
                     } else {
 
-                        _loginResult.value = "Email ou senha inválidos."
-                        Log.e("AuthViewModel", "Falha no login")
+                        _loginResult.value = "Erro no servidor."
+                        Log.e("AuthViewModel", "Resposta inválida do servidor.")
                     }
                 } else {
-                    _loginResult.value = "Erro no servidor"
-                    Log.e("AuthViewModel", "Erro na resposta do servidor: ${response.code()} - ${response.message()}")
+                    if (response.code() == 401) { // 401 Unauthorized
+                        _loginResult.value = "Email ou senha inválidos."
+                        Log.w("AuthViewModel", "Falha na autenticação (401).")
+                    } else {
+                        _loginResult.value = "Erro no servidor: Código ${response.code()}"
+                        Log.e("AuthViewModel", "Erro inesperado do servidor: ${response.code()}")
+                    }
                 }
             } catch (e: Exception) {
                 _loginResult.value = "Erro de rede: ${e.localizedMessage}"
@@ -125,7 +133,8 @@ class AuthViewModel : ViewModel() {
     fun register(name: String, email: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.authApi.register(RegisterRequest(name, email, password))
+                val response =
+                    RetrofitClient.authApi.register(RegisterRequest(name, email, password))
                 if (response.isSuccessful) {
                     Log.i("AuthViewModel", "resposta: $response")
                     Log.i("AuthViewModel", "resposta: ${response.body()}")
@@ -169,7 +178,6 @@ class AuthViewModel : ViewModel() {
         _navigateToHome.value = false
         _loginResult.value = null
     }
-
 
 
 }

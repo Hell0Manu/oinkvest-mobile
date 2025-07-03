@@ -49,8 +49,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.oinkvest_mobile.presentation.components.EnableBiometricDialog
 import androidx.fragment.app.FragmentActivity
+import com.example.oinkvest_mobile.data.local.LoginDataHolder
 import com.example.oinkvest_mobile.data.local.TokenManager
 import com.example.oinkvest_mobile.presentation.components.AnimatedBlurredBackground
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewModel()) {
@@ -101,6 +103,9 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewMod
             )
 
             ButtonLogin("ENTRAR", {
+                LoginDataHolder.email = email
+                LoginDataHolder.password = password
+
                 viewModel.login(email, password, context)
             })
 

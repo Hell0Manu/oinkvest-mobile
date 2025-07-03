@@ -15,11 +15,8 @@ import com.example.oinkvest_mobile.presentation.onboarding.OnboardingScreen
 fun MyNavHost(navHostController: NavHostController) {
     val context = LocalContext.current
 
-    val startDestination = if (AppPreferences.isOnboardingCompleted(context)) {
-        "login" // Se o onboarding foi concluído, comece pelo login
-    } else {
-        "onboarding" // Se for a primeira vez, comece pelo onboarding
-    }
+    val startDestination = if (AppPreferences.isOnboardingCompleted(context)) "login" else "onboarding"
+
 
     NavHost(
         navController = navHostController,
@@ -35,7 +32,7 @@ fun MyNavHost(navHostController: NavHostController) {
             RegisterScreen(navHostController)
         }
         composable("home") {
-            HomeScreen(navHostController)
+            HomeScreen()
         }
     }
 }

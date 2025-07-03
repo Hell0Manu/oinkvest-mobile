@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">oinkvest.ddns.net</domain>
         <domain includeSubdomains="true">oinkvest.ddns.net:8080</domain>
+        <domain includeSubdomains="true">oinkvest-1.onrender.com</domain>
     </domain-config>
 </network-security-config>

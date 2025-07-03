@@ -31,7 +31,31 @@ fun SettingsScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Configurações", style = HeaderTextStyle)
+        var webView: WebView? = null
+        var backButton by remember { mutableStateOf(false) }
+        AndroidView(
+            modifier = Modifier.weight(1f),
+            factory = { context ->
+                WebView(context).apply {
+                    val url = context.getString(R.string.base_url) + "/support"
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.loadWithOverviewMode = true
+                    settings.setSupportZoom(true)
+                    webViewClient = object : WebViewClient(){
+                        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                            backButton = view?.canGoBack() == true
+                        }
+                    }
+                    loadUrl(url)
+                }
+            }, update = {
+                webView = it
+            } )
+
+        BackHandler (enabled = backButton) {
+            webView?.goBack()
+        }
     }
 }
 
