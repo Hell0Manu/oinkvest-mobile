@@ -40,6 +40,8 @@ android {
     }
 }
 
+
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -62,4 +64,16 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation("androidx.security:security-crypto:1.0.0")
+    implementation(libs.androidx.biometric)
+
+    // interceptor de logging
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.12.0")
 }

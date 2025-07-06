@@ -2,10 +2,11 @@
     <string name="app_name">oinkvest-mobile</string>
 
     <!-- BottomAppBar -->
-    <string name="bottom_bar_item_feed">Dashboard</string>
-    <string name="bottom_bar_item_search">Carteira</string>
-    <string name="bottom_bar_item_friends">Histórico</string>
-    <string name="bottom_bar_item_profile">Alertas</string>
-    <string name="base_url">https://maraeliza.github.io/oinkvest-site/</string>
-
+        <string name="bottom_bar_item_dashboard">Dashboard</string>
+        <string name="bottom_bar_item_notification">Notificação</string>
+        <string name="bottom_bar_item_wallet">Carteira</string>
+        <string name="bottom_bar_item_history">Historico</string>
+        <string name="bottom_bar_item_settings">Configuração</string>
+    <string name="base_url">http://oinkvest.ddns.net:8080</string>
+    <string name="base_url2">https://oinkvest-1.onrender.com</string>
 </resources>
