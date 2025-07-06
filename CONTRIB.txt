@@ -1,0 +1,249 @@
+commit fc886b03538e968c6046f6289348fcb7c95fb938
+Author: Rafa <126605152+Raf1d3@users.noreply.github.com>
+Date:   Thu Jul 3 17:58:35 2025 -0300
+
+    Implementação de looding nas webviews
+
+ .../main/dashboard/DashboardScreen.kt              | 28 +++++---
+ .../oinkvest_mobile/main/history/HistoryScreen.kt  | 57 ++++++++++------
+ .../oinkvest_mobile/main/home/HomeScreen.kt        |  3 +-
+ .../main/notification/NotificationScreen.kt        | 56 +++++++++------
+ .../main/settings/SettingsScreen.kt                | 32 +++++++--
+ .../oinkvest_mobile/main/wallet/WalletScreen.kt    | 34 ++++++++--
+ .../components/AuthenticatedWebView.kt             | 79 ++++++++++++++++++++++
+ 7 files changed, 224 insertions(+), 65 deletions(-)
+
+commit edf77c34497171c98f0f80b1d4e8187ec1337b55
+Author: Rafa <126605152+Raf1d3@users.noreply.github.com>
+Date:   Thu Jul 3 16:47:20 2025 -0300
+
+    Ajuste webview e implementação de login.
+
+ .../com/example/oinkvest_mobile/MainActivity.kt    |  2 -
+ .../oinkvest_mobile/data/local/LoginDataHolder.kt  | 11 +++++
+ .../oinkvest_mobile/data/local/SessionManager.kt   | 25 +++++++++++
+ .../oinkvest_mobile/data/remote/RetrofitClient.kt  | 11 +----
+ .../oinkvest_mobile/data/remote/api/AuthApi.kt     | 16 +++----
+ .../main/dashboard/DashboardScreen.kt              | 43 ++++++++++++++++--
+ .../oinkvest_mobile/main/history/HistoryScreen.kt  | 22 ++++++----
+ .../oinkvest_mobile/main/home/HomeScreen.kt        | 17 +++++---
+ .../oinkvest_mobile/main/login/LoginScreen.kt      |  5 +++
+ .../main/notification/NotificationScreen.kt        |  6 ++-
+ .../main/settings/SettingsScreen.kt                | 26 ++++++++++-
+ .../oinkvest_mobile/main/wallet/WalletScreen.kt    | 32 +++++++-------
+ .../navigation/navhost/MyNavHost.kt                |  9 ++--
+ .../presentation/viewmodel/AuthViewModel.kt        | 40 ++++++++++-------
+ .../oinkvest_mobile/util/AppWebViewClient.kt       | 51 ++++++++++++++++++++++
+ app/src/main/res/values/strings.xml                |  2 +-
+ app/src/main/res/xml/network_security_config.xml   |  1 +
+ 17 files changed, 237 insertions(+), 82 deletions(-)
+
+commit b56a32a5e6ecd6ca77e31577b39d53b28e5ef591
+Author: Rafa <126605152+Raf1d3@users.noreply.github.com>
+Date:   Wed Jul 2 18:29:28 2025 -0300
+
+    Implementação apresentação do app onborading e testando comunicação com servidor
+
+ app/build.gradle.kts                               |   1 +
+ .../oinkvest_mobile/data/local/AppPreferences.kt   |  24 ++
+ .../oinkvest_mobile/data/remote/RetrofitClient.kt  |   9 +
+ .../oinkvest_mobile/data/remote/api/AuthApi.kt     |  11 +-
+ .../oinkvest_mobile/main/home/HomeScreen.kt        |   4 +-
+ .../oinkvest_mobile/main/login/LoginScreen.kt      | 167 ++++++------
+ .../main/register/RegisterScreen.kt                | 132 +++++----
+ .../navigation/navhost/MyNavHost.kt                |  22 +-
+ .../components/AnimatedBlurredBackground.kt        |  85 ++++++
+ .../components/BiometricSettingsDialog.kt          |   2 +-
+ .../presentation/onboarding/OnboardingScreen.kt    | 297 +++++++++++++++++++++
+ .../onboarding/components/OnboardingPage.kt        |  59 ++++
+ .../presentation/viewmodel/AuthViewModel.kt        |  23 +-
+ app/src/main/res/drawable/fingerprint.png          | Bin 1493 -> 0 bytes
+ app/src/main/res/drawable/fingerprint.xml          |  11 +
+ app/src/main/res/drawable/pig1.png                 | Bin 0 -> 66629 bytes
+ app/src/main/res/drawable/pig2.png                 | Bin 0 -> 95358 bytes
+ app/src/main/res/drawable/pig3.png                 | Bin 0 -> 56542 bytes
+ app/src/main/res/drawable/pig4.png                 | Bin 0 -> 73443 bytes
+ 19 files changed, 693 insertions(+), 154 deletions(-)
+
+commit 68412e316d8cf8cd22f975bb13e00bec06b5e9ae
+Author: Rafa <126605152+Raf1d3@users.noreply.github.com>
+Date:   Mon Jun 16 12:37:28 2025 -0300
+
+    Implementando login por biometria e ajustes de segurança
+
+ .idea/appInsightsSettings.xml                      |   1 +
+ .idea/compiler.xml                                 |   4 +-
+ .idea/deploymentTargetSelector.xml                 |   8 +
+ .kotlin/errors/errors-1748717349101.log            |  45 ++++
+ .kotlin/errors/errors-1748803417429.log            |   4 +
+ app/build.gradle.kts                               |  13 +
+ app/src/main/AndroidManifest.xml                   |  10 +-
+ .../com/example/oinkvest_mobile/MainActivity.kt    |   4 +-
+ .../oinkvest_mobile/data/local/TokenManager.kt     |  67 ++++++
+ .../oinkvest_mobile/data/remote/RetrofitClient.kt  |  36 +++
+ .../oinkvest_mobile/data/remote/api/AuthApi.kt     |  19 ++
+ .../main/dashboard/DashboardScreen.kt              |  17 +-
+ .../oinkvest_mobile/main/home/HomeScreen.kt        |  70 +++++-
+ .../oinkvest_mobile/main/login/LoginScreen.kt      | 265 +++++++++++++++++++++
+ .../main/register/RegisterScreen.kt                | 229 ++++++++++++++++++
+ .../navigation/navhost/MyNavHost.kt                |  12 +-
+ .../presentation/viewmodel/AuthViewModel.kt        | 166 +++++++++++++
+ .../presentation/viewmodel/HomeViewModel.kt        |  37 +++
+ .../ui/components/BiometricSettingsDialog.kt       |  64 +++++
+ .../com/example/oinkvest_mobile/ui/theme/Color.kt  |  16 +-
+ .../com/example/oinkvest_mobile/ui/theme/Theme.kt  |  26 +-
+ .../com/example/oinkvest_mobile/ui/theme/Type.kt   |   2 +
+ app/src/main/res/drawable/fingerprint.png          | Bin 0 -> 1493 bytes
+ app/src/main/res/drawable/ic_google.xml            |  18 ++
+ app/src/main/res/values/strings.xml                |   2 +-
+ app/src/main/res/xml/network_security_config.xml   |   7 +
+ gradle/libs.versions.toml                          |  13 +
+ settings.gradle.kts                                |   8 +-
+ 28 files changed, 1134 insertions(+), 29 deletions(-)
+
+commit f2d2db4d019c378cdf41231cbc1979584cc8016e
+Author: Hell0Manu <emanuelle.genesio@estudante.iftm.edu.br>
+Date:   Mon May 26 22:04:49 2025 -0300
+
+    ajustes de estilo
+
+ .../FeedScreen.kt => dashboard/DashboardScreen.kt} |   9 +-
+ .../FriendsScreen.kt => history/HistoryScreen.kt}  |   9 +-
+ .../oinkvest_mobile/main/home/HomeScreen.kt        | 100 +++++++++++++--------
+ .../NotificationScreen.kt}                         |   9 +-
+ .../main/settings/SettingsScreen.kt                |  42 +++++++++
+ .../SearchScreen.kt => wallet/WalletScreen.kt}     |  15 ++--
+ .../navigation/item/BottomNavItem.kt               |  39 ++++----
+ .../navigation/navhost/BottomAppBarNavHost.kt      |  42 +++++----
+ .../navigation/navhost/MyNavHost.kt                |   1 -
+ .../com/example/oinkvest_mobile/ui/theme/Theme.kt  |  10 +++
+ app/src/main/res/drawable/add_cicle_fill.xml       |  15 ----
+ app/src/main/res/drawable/background.png           | Bin 0 -> 693139 bytes
+ app/src/main/res/drawable/history_fill.xml         |   9 ++
+ app/src/main/res/drawable/history_line.xml         |   9 ++
+ app/src/main/res/drawable/home_fill.xml            |  13 ---
+ app/src/main/res/drawable/home_line.xml            |  13 ---
+ app/src/main/res/drawable/notification_fill.xml    |   9 ++
+ app/src/main/res/drawable/notification_line.xml    |   9 ++
+ app/src/main/res/drawable/pie_chart_fill.xml       |   2 +-
+ app/src/main/res/drawable/pie_chart_line.xml       |   2 +-
+ app/src/main/res/drawable/settings_fill.xml        |  14 ++-
+ app/src/main/res/drawable/settings_line.xml        |  10 +--
+ app/src/main/res/drawable/top_bar_icon.png         | Bin 0 -> 6125 bytes
+ app/src/main/res/drawable/user_fill.xml            |   9 --
+ app/src/main/res/drawable/user_line.xml            |   9 --
+ app/src/main/res/drawable/wallet_fill.xml          |   9 ++
+ app/src/main/res/drawable/wallet_line.xml          |   9 ++
+ app/src/main/res/values/strings.xml                |   9 +-
+ 28 files changed, 250 insertions(+), 176 deletions(-)
+
+commit 548115130031a1ff7b3462e4130fae1306689106
+Author: Mara Eliza <145588620+maraeliza@users.noreply.github.com>
+Date:   Mon May 26 13:16:28 2025 -0300
+
+    add webview
+
+ .idea/deploymentTargetSelector.xml                 |  3 --
+ app/src/main/AndroidManifest.xml                   |  2 +-
+ .../oinkvest_mobile/main/feed/FeedScreen.kt        | 41 ++++++++++++++++++++--
+ .../oinkvest_mobile/main/friends/FriendsScreen.kt  | 41 ++++++++++++++++++++--
+ .../oinkvest_mobile/main/profile/ProfileScreen.kt  | 40 +++++++++++++++++++--
+ .../oinkvest_mobile/main/search/SearchScreen.kt    | 40 +++++++++++++++++++--
+ .../navigation/item/BottomNavItem.kt               |  4 +--
+ app/src/main/res/values/strings.xml                | 10 +++---
+ 8 files changed, 163 insertions(+), 18 deletions(-)
+
+commit 462792fd433aff941c9d9390166017a6ace0d2f3
+Author: Emanuelle <102062744+Hell0Manu@users.noreply.github.com>
+Date:   Sun May 25 17:25:44 2025 -0300
+
+    navigation bar funcionando 100% faltando apenas estilos da prototipação
+
+ .../com/example/oinkvest_mobile/MainActivity.kt    |  3 +-
+ .../oinkvest_mobile/main/home/HomeScreen.kt        | 57 ++++++++++++++++++++--
+ 2 files changed, 55 insertions(+), 5 deletions(-)
+
+commit 9ea43283a3fd4cb0bf405b746283591f0bc9090f
+Author: Emanuelle <102062744+Hell0Manu@users.noreply.github.com>
+Date:   Sun May 25 16:38:02 2025 -0300
+
+    Adição bottom bar
+
+ .../oinkvest_mobile/main/home/HomeScreen.kt        | 87 +++++++++++++++++++---
+ .../navigation/navhost/BottomAppBarNavHost.kt      | 45 +++++++++++
+ 2 files changed, 120 insertions(+), 12 deletions(-)
+
+commit f125d4d7c22aa0074f8e1375e3b173b4348fc458
+Author: Emanuelle <102062744+Hell0Manu@users.noreply.github.com>
+Date:   Sun May 25 15:27:31 2025 -0300
+
+    commit inicial
+
+ .gitignore                                         |  15 ++
+ .idea/.gitignore                                   |   3 +
+ .idea/.name                                        |   1 +
+ .idea/AndroidProjectSystem.xml                     |   6 +
+ .idea/appInsightsSettings.xml                      |  26 +++
+ .idea/compiler.xml                                 |   6 +
+ .idea/deploymentTargetSelector.xml                 |  13 ++
+ .idea/gradle.xml                                   |  19 +++
+ .idea/inspectionProfiles/Project_Default.xml       |  61 +++++++
+ .idea/kotlinc.xml                                  |   6 +
+ .idea/migrations.xml                               |  10 ++
+ .idea/misc.xml                                     |   9 +
+ .idea/runConfigurations.xml                        |  17 ++
+ .idea/vcs.xml                                      |   6 +
+ app/.gitignore                                     |   1 +
+ app/build.gradle.kts                               |  65 ++++++++
+ app/proguard-rules.pro                             |  21 +++
+ .../oinkvest_mobile/ExampleInstrumentedTest.kt     |  24 +++
+ app/src/main/AndroidManifest.xml                   |  28 ++++
+ .../com/example/oinkvest_mobile/MainActivity.kt    |  21 +++
+ .../oinkvest_mobile/main/feed/FeedScreen.kt        |  27 +++
+ .../oinkvest_mobile/main/friends/FriendsScreen.kt  |  27 +++
+ .../oinkvest_mobile/main/home/HomeScreen.kt        |  27 +++
+ .../oinkvest_mobile/main/profile/ProfileScreen.kt  |  27 +++
+ .../oinkvest_mobile/main/search/SearchScreen.kt    |  27 +++
+ .../navigation/item/BottomNavItem.kt               |  44 +++++
+ .../navigation/navhost/MyNavHost.kt                |  24 +++
+ .../com/example/oinkvest_mobile/ui/theme/Color.kt  |  11 ++
+ .../com/example/oinkvest_mobile/ui/theme/Theme.kt  |  57 +++++++
+ .../com/example/oinkvest_mobile/ui/theme/Type.kt   |  34 ++++
+ app/src/main/res/drawable/add_cicle_fill.xml       |  15 ++
+ app/src/main/res/drawable/home_fill.xml            |  13 ++
+ app/src/main/res/drawable/home_line.xml            |  13 ++
+ .../main/res/drawable/ic_launcher_background.xml   | 170 +++++++++++++++++++
+ .../main/res/drawable/ic_launcher_foreground.xml   |  30 ++++
+ app/src/main/res/drawable/pie_chart_fill.xml       |  16 ++
+ app/src/main/res/drawable/pie_chart_line.xml       |  16 ++
+ app/src/main/res/drawable/settings_fill.xml        |  13 ++
+ app/src/main/res/drawable/settings_line.xml        |   9 +
+ app/src/main/res/drawable/user_fill.xml            |   9 +
+ app/src/main/res/drawable/user_line.xml            |   9 +
+ app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml |   6 +
+ .../res/mipmap-anydpi-v26/ic_launcher_round.xml    |   6 +
+ app/src/main/res/mipmap-hdpi/ic_launcher.webp      | Bin 0 -> 1404 bytes
+ .../main/res/mipmap-hdpi/ic_launcher_round.webp    | Bin 0 -> 2898 bytes
+ app/src/main/res/mipmap-mdpi/ic_launcher.webp      | Bin 0 -> 982 bytes
+ .../main/res/mipmap-mdpi/ic_launcher_round.webp    | Bin 0 -> 1772 bytes
+ app/src/main/res/mipmap-xhdpi/ic_launcher.webp     | Bin 0 -> 1900 bytes
+ .../main/res/mipmap-xhdpi/ic_launcher_round.webp   | Bin 0 -> 3918 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_launcher.webp    | Bin 0 -> 2884 bytes
+ .../main/res/mipmap-xxhdpi/ic_launcher_round.webp  | Bin 0 -> 5914 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp   | Bin 0 -> 3844 bytes
+ .../main/res/mipmap-xxxhdpi/ic_launcher_round.webp | Bin 0 -> 7778 bytes
+ app/src/main/res/values/colors.xml                 |  10 ++
+ app/src/main/res/values/strings.xml                |   9 +
+ app/src/main/res/values/themes.xml                 |   5 +
+ app/src/main/res/xml/backup_rules.xml              |  13 ++
+ app/src/main/res/xml/data_extraction_rules.xml     |  19 +++
+ .../com/example/oinkvest_mobile/ExampleUnitTest.kt |  17 ++
+ build.gradle.kts                                   |   6 +
+ gradle.properties                                  |  23 +++
+ gradle/libs.versions.toml                          |  38 +++++
+ gradle/wrapper/gradle-wrapper.jar                  | Bin 0 -> 59203 bytes
+ gradle/wrapper/gradle-wrapper.properties           |   6 +
+ gradlew                                            | 185 +++++++++++++++++++++
+ gradlew.bat                                        |  89 ++++++++++
+ settings.gradle.kts                                |  24 +++
+ 67 files changed, 1432 insertions(+)

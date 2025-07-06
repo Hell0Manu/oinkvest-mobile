@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://oinkvest.ddns.net:8080"
+    private const val BASE_URL = "https://oinkvest-1.onrender.com"
 
     // 1. Cria o interceptor de logging
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

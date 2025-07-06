@@ -1,0 +1,9 @@
+* fc886b03538e968c6046f6289348fcb7c95fb938 Implementação de looding nas webviews
+* edf77c34497171c98f0f80b1d4e8187ec1337b55 Ajuste webview e implementação de login.
+* b56a32a5e6ecd6ca77e31577b39d53b28e5ef591 Implementação apresentação do app onborading e testando comunicação com servidor
+* 68412e316d8cf8cd22f975bb13e00bec06b5e9ae Implementando login por biometria e ajustes de segurança
+* f2d2db4d019c378cdf41231cbc1979584cc8016e ajustes de estilo
+* 548115130031a1ff7b3462e4130fae1306689106 add webview
+* 462792fd433aff941c9d9390166017a6ace0d2f3 navigation bar funcionando 100% faltando apenas estilos da prototipação
+* 9ea43283a3fd4cb0bf405b746283591f0bc9090f Adição bottom bar
+* f125d4d7c22aa0074f8e1375e3b173b4348fc458 commit inicial
